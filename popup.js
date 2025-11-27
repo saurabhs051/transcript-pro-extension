@@ -153,7 +153,8 @@ function showPreview() {
   const content = document.getElementById('previewContent');
   
   const includeTimestamps = document.getElementById('includeTimestamps').checked;
-  const previewText = formatTranscript(currentTranscript.slice(0, 10), includeTimestamps, true);
+  const cleanFormat = document.getElementById('cleanFormatting').checked;
+  const previewText = formatTranscript(currentTranscript.slice(0, 10), includeTimestamps, cleanFormat);
   
   content.textContent = previewText + '\n\n... (preview of first 10 lines)';
   preview.classList.remove('hidden');
@@ -269,6 +270,7 @@ async function generateSummary() {
     summaryDiv.classList.remove('hidden');
     
     btn.textContent = '✓ Summary Generated';
+    btn.disabled = false;
     
   } catch (error) {
     showStatus('Failed to generate summary', 'error');
