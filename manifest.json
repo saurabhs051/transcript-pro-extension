@@ -5,6 +5,7 @@
   "description": "Download YouTube transcripts instantly with timestamps, AI summaries, and clean formatting. Export as TXT, PDF, or Markdown.",
   "permissions": [
     "activeTab",
+    "scripting",
     "storage"
   ],
   "host_permissions": [
