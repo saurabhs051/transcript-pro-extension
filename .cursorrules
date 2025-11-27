@@ -1,0 +1,47 @@
+# Cursor Rules for this Project
+
+## Documentation Policy
+- **NO excessive documentation files**
+- Maximum 1 documentation file if absolutely critical
+- Delete temporary/test documentation files when done
+- Do NOT create: README, STATUS, GUIDE, TROUBLESHOOTING, TEST-RESULTS, SUMMARY, or multiple similar files
+- If documentation is truly needed, consolidate into ONE file maximum
+
+## File Creation Policy
+- Minimize number of files created
+- Reuse and modify existing files whenever possible
+- Only create new files when absolutely necessary
+- Delete temporary files after completing tasks
+
+## Debugging Approach
+- Add extensive logging to code instead of creating documentation
+- Focus on code and functionality, not documentation
+- Use console.log statements for debugging
+
+## Code Focus
+- Prioritize working code over documentation
+- Keep things clean and minimal
+- Remove redundant files immediately
+
+## Testing Requirements - CRITICAL
+- **NEVER trust automated tests alone for customer-facing output**
+- **ALWAYS validate visual/rendered output manually**
+- For PDFs: Extract and inspect actual text content, check for encoding issues
+- For exports: Verify special characters render correctly (emojis, currency symbols)
+- Test as if you're a paying customer who knows nothing about code
+- Check for: garbage characters, missing content, broken formatting, wrong data
+- Automated tests check "does it work?", manual inspection checks "does it look professional?"
+- One visual bug destroys customer trust - catch them ALL before shipping
+- **Check for placeholder URLs/domains in output** - Remove funnelgeneratorpro.com, example.com, yoursite.com, etc. if you don't own them
+- **Verify all URLs and contact info** in customer-facing content are valid or removed
+
+## Product Development Strategy
+- **Build desktop apps with Electron** for maximum reach and ease of use
+- Target ALL platforms: Windows, Mac (Intel + ARM), Linux
+- No user installations required (Node.js, npm, etc.) - apps must be standalone
+- One-click installation: Download → Double-click → Works
+- Configure GitHub Actions for automated multi-platform builds
+- Set up proper releases with version tags (v1.0.0, v1.1.0, etc.)
+- Always build for cross-platform compatibility from day 1
+- Avoid platform-specific code or emojis/symbols that don't render universally
+

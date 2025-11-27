@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TranscriptPro</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📝 TranscriptPro</h1>
+      <p class="tagline">Download YouTube transcripts instantly</p>
+    </header>
+
+    <div id="status" class="status hidden"></div>
+
+    <div id="notYoutube" class="warning hidden">
+      ⚠️ Please open a YouTube video to use this extension
+    </div>
+
+    <div id="mainContent" class="hidden">
+      <div class="video-info">
+        <h3 id="videoTitle">Loading...</h3>
+        <p id="videoChannel" class="channel"></p>
+      </div>
+
+      <div class="options">
+        <label class="checkbox-label">
+          <input type="checkbox" id="includeTimestamps" checked>
+          <span>Include timestamps</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="cleanFormatting" checked>
+          <span>Clean formatting (remove [Music], etc.)</span>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button id="downloadTxt" class="btn btn-primary">
+          <span class="icon">📄</span> Download TXT
+        </button>
+        <button id="downloadMd" class="btn btn-primary">
+          <span class="icon">📝</span> Download MD
+        </button>
+        <button id="copyClipboard" class="btn btn-secondary">
+          <span class="icon">📋</span> Copy to Clipboard
+        </button>
+      </div>
+
+      <div class="ai-section">
+        <button id="generateSummary" class="btn btn-ai">
+          <span class="icon">🤖</span> Generate AI Summary
+        </button>
+        <div id="summaryContent" class="summary hidden"></div>
+      </div>
+
+      <div id="transcriptPreview" class="preview hidden">
+        <h4>Preview:</h4>
+        <div id="previewContent"></div>
+      </div>
+    </div>
+
+    <footer>
+      <p class="footer-text">Made with ❤️ for creators & learners</p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
+
