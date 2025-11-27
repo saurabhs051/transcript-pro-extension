@@ -9,8 +9,11 @@
 <body>
   <div class="container">
     <header>
-      <h1>📝 TranscriptPro</h1>
-      <p class="tagline">Download YouTube transcripts instantly</p>
+      <div class="header-row">
+        <h1>📝 TranscriptPro</h1>
+        <button id="refreshBtn" class="btn-refresh" title="Reload transcript">🔄</button>
+      </div>
+      <p class="tagline">The Ultimate YouTube Transcript Tool</p>
     </header>
 
     <div id="status" class="status hidden"></div>
@@ -19,45 +22,203 @@
       ⚠️ Please open a YouTube video to use this extension
     </div>
 
+    <div id="playlistMode" class="warning hidden">
+      📚 Playlist detected! <button id="batchDownload" class="btn-link">Download all transcripts</button>
+    </div>
+
     <div id="mainContent" class="hidden">
+      <!-- Video Info -->
       <div class="video-info">
         <h3 id="videoTitle">Loading...</h3>
         <p id="videoChannel" class="channel"></p>
+        <div class="video-stats">
+          <span id="wordCount">0 words</span>
+          <span class="separator">•</span>
+          <span id="readTime">0 min read</span>
+          <span class="separator">•</span>
+          <span id="transcriptLang">en</span>
+        </div>
       </div>
 
-      <div class="options">
-        <label class="checkbox-label">
-          <input type="checkbox" id="includeTimestamps" checked>
-          <span>Include timestamps</span>
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" id="cleanFormatting" checked>
-          <span>Clean formatting (remove [Music], etc.)</span>
-        </label>
+      <!-- Tab Navigation -->
+      <div class="tab-nav">
+        <button class="tab-btn active" data-tab="download">📥 Download</button>
+        <button class="tab-btn" data-tab="search">🔍 Search</button>
+        <button class="tab-btn" data-tab="tools">🛠️ Tools</button>
       </div>
 
-      <div class="actions">
-        <button id="downloadTxt" class="btn btn-primary">
-          <span class="icon">📄</span> Download TXT
-        </button>
-        <button id="downloadMd" class="btn btn-primary">
-          <span class="icon">📝</span> Download MD
-        </button>
-        <button id="copyClipboard" class="btn btn-secondary">
-          <span class="icon">📋</span> Copy to Clipboard
-        </button>
+      <!-- Download Tab -->
+      <div class="tab-content active" id="tab-download">
+        <!-- Format Options -->
+        <div class="options-section">
+          <h4>Options</h4>
+          <div class="options-grid">
+            <label class="checkbox-label">
+              <input type="checkbox" id="includeTimestamps" checked>
+              <span>Include timestamps</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="cleanFormatting" checked>
+              <span>Remove [Music], [Applause]</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="removeFiller" checked>
+              <span>Remove filler words (um, uh)</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="smartParagraphs" checked>
+              <span>Smart paragraph grouping</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="detectSpeakers">
+              <span>Detect speakers</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Export Formats -->
+        <div class="export-section">
+          <h4>Export Format</h4>
+          <div class="export-grid">
+            <button id="downloadTxt" class="btn btn-export" title="Plain text">
+              <span class="export-icon">📄</span>
+              <span class="export-label">TXT</span>
+            </button>
+            <button id="downloadMd" class="btn btn-export" title="Markdown">
+              <span class="export-icon">📝</span>
+              <span class="export-label">MD</span>
+            </button>
+            <button id="downloadSrt" class="btn btn-export" title="Subtitles">
+              <span class="export-icon">🎬</span>
+              <span class="export-label">SRT</span>
+            </button>
+            <button id="downloadVtt" class="btn btn-export" title="Web subtitles">
+              <span class="export-icon">🌐</span>
+              <span class="export-label">VTT</span>
+            </button>
+            <button id="downloadJson" class="btn btn-export" title="JSON data">
+              <span class="export-icon">{ }</span>
+              <span class="export-label">JSON</span>
+            </button>
+            <button id="downloadPdf" class="btn btn-export" title="PDF document">
+              <span class="export-icon">📕</span>
+              <span class="export-label">PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <button id="copyClipboard" class="btn btn-secondary btn-full">
+            <span class="icon">📋</span> Copy to Clipboard
+          </button>
+          <button id="liveSync" class="btn btn-accent btn-full">
+            <span class="icon">▶️</span> Live Sync Mode
+          </button>
+        </div>
       </div>
 
-      <div class="ai-section">
-        <button id="generateSummary" class="btn btn-ai">
-          <span class="icon">🤖</span> Generate AI Summary
-        </button>
-        <div id="summaryContent" class="summary hidden"></div>
+      <!-- Search Tab -->
+      <div class="tab-content" id="tab-search">
+        <div class="search-container">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search transcript..." autocomplete="off">
+            <span id="searchCount" class="search-count"></span>
+          </div>
+          <div class="search-nav">
+            <button id="searchPrev" class="btn-icon" disabled>▲</button>
+            <button id="searchNext" class="btn-icon" disabled>▼</button>
+          </div>
+        </div>
+        
+        <div id="transcriptViewer" class="transcript-viewer">
+          <div id="transcriptContent" class="transcript-content">
+            <!-- Transcript entries will be rendered here -->
+          </div>
+        </div>
       </div>
 
+      <!-- Tools Tab -->
+      <div class="tab-content" id="tab-tools">
+        <!-- Word Cloud -->
+        <div class="tool-section">
+          <h4>📊 Key Topics</h4>
+          <div id="wordCloud" class="word-cloud">
+            <!-- Word cloud will be generated here -->
+          </div>
+        </div>
+
+        <!-- Quote Generator -->
+        <div class="tool-section">
+          <h4>💬 Quote Generator</h4>
+          <p class="tool-hint">Select text from the Search tab to create a quote card</p>
+          <div id="quotePreview" class="quote-preview hidden">
+            <div class="quote-card" id="quoteCard">
+              <div class="quote-text" id="quoteText"></div>
+              <div class="quote-source">
+                <span id="quoteVideo"></span>
+                <span id="quoteChannel"></span>
+              </div>
+            </div>
+            <div class="quote-actions">
+              <button id="copyQuote" class="btn btn-secondary">📋 Copy</button>
+              <button id="downloadQuote" class="btn btn-primary">💾 Save Image</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="tool-section">
+          <h4>📈 Statistics</h4>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-value" id="statWords">0</span>
+              <span class="stat-label">Words</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="statSentences">0</span>
+              <span class="stat-label">Sentences</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="statDuration">0:00</span>
+              <span class="stat-label">Duration</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="statPace">0</span>
+              <span class="stat-label">Words/min</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview (shown across tabs) -->
       <div id="transcriptPreview" class="preview hidden">
         <h4>Preview:</h4>
         <div id="previewContent"></div>
+      </div>
+    </div>
+
+    <!-- Live Sync Overlay -->
+    <div id="liveSyncOverlay" class="live-sync-overlay hidden">
+      <div class="live-sync-header">
+        <span class="live-indicator">● LIVE</span>
+        <button id="closeLiveSync" class="btn-close">✕</button>
+      </div>
+      <div id="liveSyncContent" class="live-sync-content">
+        <!-- Live transcript will appear here -->
+      </div>
+    </div>
+
+    <!-- Batch Download Modal -->
+    <div id="batchModal" class="modal hidden">
+      <div class="modal-content">
+        <h3>📚 Batch Download</h3>
+        <p>Downloading transcripts from playlist...</p>
+        <div class="progress-bar">
+          <div id="batchProgress" class="progress-fill"></div>
+        </div>
+        <p id="batchStatus">0 / 0 videos</p>
+        <button id="cancelBatch" class="btn btn-secondary">Cancel</button>
       </div>
     </div>
 
@@ -69,4 +230,3 @@
   <script src="popup.js"></script>
 </body>
 </html>
-
