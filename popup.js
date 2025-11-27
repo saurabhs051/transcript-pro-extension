@@ -120,7 +120,7 @@ async function fetchTranscript(videoId) {
     
   } catch (error) {
     console.error('Transcript fetch error:', error);
-    throw new Error('Could not fetch transcript. Make sure captions are enabled for this video.');
+    throw new Error('No transcript available for this video. Try enabling captions (CC button) or choose a video with subtitles.');
   }
 }
 
