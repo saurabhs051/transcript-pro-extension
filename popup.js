@@ -187,7 +187,7 @@ async function loadTranscript(tab) {
       throw new Error('Failed to fetch transcript');
     }
 
-    const { transcript, error } = transcriptResult.result;
+    const { transcript, error, language } = transcriptResult.result;
     
     if (error) {
       throw new Error(error);
@@ -197,6 +197,12 @@ async function loadTranscript(tab) {
     
     if (!currentTranscript || currentTranscript.length === 0) {
       throw new Error('No transcript available for this video');
+    }
+    
+    // Update language display
+    const langDisplay = document.getElementById('transcriptLang');
+    if (langDisplay && language) {
+      langDisplay.textContent = language;
     }
 
     // Update stats
@@ -1385,14 +1391,23 @@ function fetchTranscriptFromPage() {
         return;
       }
       
-      // Select best track - prefer English, then any available
+      // Select best track - prefer English, then manual over auto, then any available
       let selectedTrack = captionTracks.find(track => 
         track.languageCode === 'en' || track.vssId?.includes('.en')
-      ) || captionTracks.find(track => 
-        track.kind !== 'asr' // Prefer manual over auto-generated
-      ) || captionTracks[0];
+      );
       
-      console.log('Selected track:', selectedTrack?.languageCode, selectedTrack?.kind);
+      if (!selectedTrack) {
+        // Try any non-auto-generated track
+        selectedTrack = captionTracks.find(track => track.kind !== 'asr');
+      }
+      
+      if (!selectedTrack) {
+        // Fall back to any available track
+        selectedTrack = captionTracks[0];
+      }
+      
+      const trackLanguage = selectedTrack?.name?.simpleText || selectedTrack?.languageCode || 'Unknown';
+      console.log('Selected track:', trackLanguage, selectedTrack?.languageCode, selectedTrack?.kind);
       
       if (!selectedTrack?.baseUrl) {
         resolve({ transcript: null, error: 'Caption URL not found' });
@@ -1547,16 +1562,39 @@ function fetchTranscriptFromPage() {
             const patterns = [
               /"getTranscriptEndpoint":\s*\{\s*"params":\s*"([^"]+)"/,
               /getTranscriptEndpoint.*?"params":\s*"([^"]+)"/,
-              /"params":\s*"(Cg[A-Za-z0-9_-]+)"/g  // Transcript params usually start with Cg
+              /"params":\s*"(Cg[A-Za-z0-9_\-=%]+)"/  // Transcript params - include URL encoding chars
             ];
             
             for (const pattern of patterns) {
               const match = pageHtml.match(pattern);
               if (match && match[1]) {
-                transcriptParams = match[1];
+                // URL decode the params if needed
+                transcriptParams = match[1].replace(/%3D/g, '=').replace(/%26/g, '&');
                 console.log('Found params via HTML regex');
                 break;
               }
+            }
+          }
+          
+          // Method 4: Try ytInitialData engagementPanels more thoroughly
+          if (!transcriptParams && pageData) {
+            const searchInObject = (obj, depth = 0) => {
+              if (depth > 10 || !obj || typeof obj !== 'object') return null;
+              
+              if (obj.getTranscriptEndpoint?.params) {
+                return obj.getTranscriptEndpoint.params;
+              }
+              
+              for (const key of Object.keys(obj)) {
+                const result = searchInObject(obj[key], depth + 1);
+                if (result) return result;
+              }
+              return null;
+            };
+            
+            transcriptParams = searchInObject(pageData);
+            if (transcriptParams) {
+              console.log('Found params via deep search');
             }
           }
           
@@ -1621,7 +1659,7 @@ function fetchTranscriptFromPage() {
             }
           }
           
-          if (!segments) {
+          if (!segments || segments.length === 0) {
             console.log('No segments found in API response');
             return null;
           }
@@ -1629,6 +1667,7 @@ function fetchTranscriptFromPage() {
           const transcript = [];
           
           for (const segment of segments) {
+            // Handle transcriptSegmentRenderer (actual transcript text)
             const segRenderer = segment?.transcriptSegmentRenderer;
             if (segRenderer) {
               const startMs = parseInt(segRenderer.startMs || '0', 10);
@@ -1637,6 +1676,8 @@ function fetchTranscriptFromPage() {
               let text = '';
               if (segRenderer.snippet?.runs) {
                 text = segRenderer.snippet.runs.map(r => r.text || '').join('');
+              } else if (segRenderer.snippet?.simpleText) {
+                text = segRenderer.snippet.simpleText;
               }
               
               text = text.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
@@ -1646,6 +1687,7 @@ function fetchTranscriptFromPage() {
                 transcript.push({ start, timestamp, text });
               }
             }
+            // Skip transcriptSectionHeaderRenderer (these are section dividers, not transcript)
           }
           
           function formatTimestampLocal(seconds) {
@@ -1735,7 +1777,9 @@ function fetchTranscriptFromPage() {
         return;
       }
       
-      resolve({ transcript, error: null });
+      // Include language info in the result
+      const transcriptLanguage = selectedTrack?.name?.simpleText || selectedTrack?.languageCode || 'Unknown';
+      resolve({ transcript, error: null, language: transcriptLanguage });
       
     } catch (error) {
       resolve({ transcript: null, error: error.message });
