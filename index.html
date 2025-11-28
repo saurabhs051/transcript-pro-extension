@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Download YouTube transcripts instantly. Export as TXT, SRT, VTT, JSON, PDF. Search, live sync, and more - 100% free!">
+  <title>TranscriptPro - Download YouTube Transcripts Instantly</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #1e293b;
+      background: #ffffff;
+    }
+
+    /* Navigation */
+    nav {
+      padding: 20px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: #6366f1;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #64748b;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #6366f1;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 100px 5% 80px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 56px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 22px;
+      margin-bottom: 40px;
+      opacity: 0.95;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: white;
+      color: #6366f1;
+      padding: 16px 40px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 18px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 80px 5%;
+      background: #f8fafc;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 60px;
+      color: #1e293b;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .feature-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 22px;
+      margin-bottom: 12px;
+      color: #1e293b;
+    }
+
+    .feature-card p {
+      color: #64748b;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* Screenshots Section */
+    .screenshots {
+      padding: 80px 5%;
+      background: white;
+    }
+
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .screenshot-card {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+
+    .screenshot-card:hover {
+      transform: scale(1.03);
+    }
+
+    .screenshot-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* How It Works */
+    .how-it-works {
+      padding: 80px 5%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .step {
+      text-align: center;
+    }
+
+    .step-number {
+      display: inline-block;
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .step h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .step p {
+      opacity: 0.9;
+      font-size: 15px;
+    }
+
+    /* Download Section */
+    .download-section {
+      padding: 80px 5%;
+      background: #f8fafc;
+      text-align: center;
+    }
+
+    .download-section h2 {
+      font-size: 42px;
+      margin-bottom: 20px;
+      color: #1e293b;
+    }
+
+    .download-section p {
+      font-size: 18px;
+      color: #64748b;
+      margin-bottom: 40px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 5%;
+      background: #1e293b;
+      color: white;
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .footer-text {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .section-title {
+        font-size: 32px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .screenshots-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .feature-card, .step, .screenshot-card {
+      animation: fadeInUp 0.6s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <a href="#" class="logo">📝 TranscriptPro</a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#screenshots">Screenshots</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="https://github.com/saurabhs051/transcript-pro-extension" target="_blank">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Download YouTube Transcripts<br>in Seconds</h1>
+    <p>The ultimate transcript tool for YouTube. Search, export, analyze - all with powerful local features.</p>
+    <a href="#" class="cta-button" id="installBtn">🚀 Add to Chrome - It's Free</a>
+    <div class="badge">✨ 100% Free • No Tracking • Open Source</div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <h2 class="section-title">Powerful Features</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📥</div>
+        <h3>Multiple Export Formats</h3>
+        <p>Download as TXT, Markdown, SRT, VTT, JSON, or PDF. Choose the format that works for you.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Real-Time Search</h3>
+        <p>Search through transcripts instantly with highlighting. Navigate matches with keyboard shortcuts.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">▶️</div>
+        <h3>Click-to-Seek</h3>
+        <p>Click any timestamp to jump directly to that moment in the video. Perfect for reviewing content.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Live Sync Mode</h3>
+        <p>Karaoke-style real-time tracking. The transcript follows along as the video plays.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🧹</div>
+        <h3>Smart Cleaning</h3>
+        <p>Remove filler words (um, uh), [Music] tags, and format into clean paragraphs automatically.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h3>Any Language</h3>
+        <p>Works with transcripts in any language. Supports both auto-generated and manual captions.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3>Speaker Detection</h3>
+        <p>Experimental feature that identifies different speakers in interviews and podcasts.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Word Cloud & Stats</h3>
+        <p>Visualize key topics with word clouds. Get reading time, word count, and speaking pace stats.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Privacy First</h3>
+        <p>No data collection. No tracking. Everything runs locally in your browser. Open source.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screenshots Section -->
+  <section class="screenshots" id="screenshots">
+    <h2 class="section-title">See It In Action</h2>
+    <div class="screenshots-grid">
+      <div class="screenshot-card">
+        <img src="store-assets/store-screenshot-1-download-tab.png" alt="Download Tab - Export in multiple formats">
+      </div>
+      <div class="screenshot-card">
+        <img src="store-assets/store-screenshot-2-search-tab.png" alt="Search Tab - Find text instantly">
+      </div>
+      <div class="screenshot-card">
+        <img src="store-assets/store-screenshot-3-tools-tab.png" alt="Tools Tab - Word cloud and statistics">
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works" id="how-it-works">
+    <h2 class="section-title">How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Install Extension</h3>
+        <p>Add TranscriptPro to your Chrome browser in one click.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Open YouTube Video</h3>
+        <p>Navigate to any YouTube video with available captions.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Click Extension Icon</h3>
+        <p>The transcript loads automatically. Search, export, analyze!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download Section -->
+  <section class="download-section">
+    <h2>Ready to Get Started?</h2>
+    <p>Join thousands of students, creators, and researchers using TranscriptPro</p>
+    <a href="#" class="cta-button" id="installBtn2">🚀 Add to Chrome - It's Free</a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="https://github.com/saurabhs051/transcript-pro-extension" target="_blank">GitHub</a>
+      <a href="https://github.com/saurabhs051/transcript-pro-extension/blob/main/PRIVACY.md" target="_blank">Privacy Policy</a>
+      <a href="https://github.com/saurabhs051/transcript-pro-extension/issues" target="_blank">Support</a>
+    </div>
+    <p class="footer-text">© 2024 TranscriptPro. Made with ❤️ for creators & learners.</p>
+    <p class="footer-text">100% Free • Open Source • No Tracking</p>
+  </footer>
+
+  <script>
+    // Update Chrome Web Store links once published
+    const CHROME_STORE_URL = 'https://chrome.google.com/webstore/detail/YOUR_EXTENSION_ID_HERE';
+    
+    document.getElementById('installBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Extension coming soon to Chrome Web Store! Check back in 1-3 days.');
+      // Once published, uncomment:
+      // window.open(CHROME_STORE_URL, '_blank');
+    });
+
+    document.getElementById('installBtn2').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Extension coming soon to Chrome Web Store! Check back in 1-3 days.');
+      // Once published, uncomment:
+      // window.open(CHROME_STORE_URL, '_blank');
+    });
+
+    // Smooth scroll for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+
