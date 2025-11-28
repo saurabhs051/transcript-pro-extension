@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "TranscriptPro - YouTube Transcript Downloader",
   "version": "1.0.0",
-  "description": "The ultimate YouTube transcript tool. Search, export (TXT/MD/SRT/VTT/JSON/PDF), live sync, speaker detection, word cloud, and quote generator. Click timestamps to seek!",
+  "description": "Download YouTube transcripts instantly. Export as TXT/SRT/VTT/JSON/PDF. Search, live sync, click timestamps & more!",
   "permissions": [
     "activeTab",
     "tabs",
