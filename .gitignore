@@ -28,6 +28,3 @@ node_modules/
 *.tmp
 *.temp
 
-# Store assets (not needed in repo)
-store-assets/
-
