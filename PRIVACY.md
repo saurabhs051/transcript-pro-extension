@@ -24,7 +24,7 @@ TranscriptPro operates entirely **locally on your device**:
 1. When you open a YouTube video, the extension accesses the transcript data that YouTube already provides
 2. All transcript processing happens in your browser
 3. No data is sent to external servers
-4. No data is stored beyond your current session (except user preferences)
+4. No data is stored beyond your current session
 
 ## Permissions Explained
 
@@ -33,21 +33,13 @@ The extension requests the following permissions:
 - **activeTab**: To access the current YouTube video page
 - **tabs**: To detect when you navigate to a new video
 - **scripting**: To extract transcript data from YouTube's page
-- **storage**: To save your formatting preferences (timestamps on/off, etc.)
 - **host_permissions (youtube.com)**: To access YouTube pages only
 
 These permissions are used solely to provide the transcript download functionality. No data is collected or transmitted.
 
 ## User Preferences
 
-The only data stored locally is your formatting preferences:
-- Include timestamps (on/off)
-- Clean formatting (on/off)
-- Remove filler words (on/off)
-- Smart paragraphs (on/off)
-- Speaker detection (on/off)
-
-These preferences are stored in your browser's local storage and never leave your device.
+Your formatting preferences (timestamps on/off, clean formatting, etc.) are only stored in memory during your current session. When you close the extension popup, preferences reset to defaults. No persistent data is stored.
 
 ## Third-Party Services
 
